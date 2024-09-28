@@ -1,4 +1,7 @@
 const pino = require("pino");
+const process = require("process");
+
+const isProd = process.env.NODE_ENV === "production";
 
 const transport = pino.transport({
   target: "pino-pretty",
@@ -6,11 +9,13 @@ const transport = pino.transport({
 });
 
 const log = pino(
-  {
-    level: "debug",
-    base: null,
-    timestamp: pino.stdTimeFunctions.isoTime,
-  },
+  isProd
+    ? {}
+    : {
+        level: "debug",
+        base: null,
+        timestamp: pino.stdTimeFunctions.isoTime,
+      },
   transport
 );
 
