@@ -18,12 +18,12 @@ class service {
 
     const token = user.generateToken();
 
-    const data = {
+    const userData = {
       name: user.name,
       email: user.email,
     };
 
-    return responseType("SUCCESS", "1", "Success", { data, token }, 200);
+    return responseType("SUCCESS", "1", "Success", { userData, token }, 200);
   }
 }
 
