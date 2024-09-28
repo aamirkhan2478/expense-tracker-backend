@@ -3,20 +3,30 @@ const process = require("process");
 
 const isProd = process.env.NODE_ENV === "production";
 
-const transport = pino.transport({
-  target: "pino-pretty",
-  options: { colorize: true },
-});
+let log;
 
-const log = pino(
-  isProd
-    ? {}
-    : {
-        level: "debug",
-        base: null,
-        timestamp: pino.stdTimeFunctions.isoTime,
-      },
-  transport
-);
+if (isProd) {
+  // In production, avoid pino-pretty (use JSON format)
+  log = pino({
+    level: "info", // Set your preferred log level for production
+    base: null,
+    timestamp: pino.stdTimeFunctions.isoTime,
+  });
+} else {
+  // In development, use pino-pretty
+  const transport = pino.transport({
+    target: "pino-pretty",
+    options: { colorize: true },
+  });
+
+  log = pino(
+    {
+      level: "debug",
+      base: null,
+      timestamp: pino.stdTimeFunctions.isoTime,
+    },
+    transport
+  );
+}
 
 module.exports = log;
